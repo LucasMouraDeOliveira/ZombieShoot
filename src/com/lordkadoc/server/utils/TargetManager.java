@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import com.lordkadoc.commons.Constants;
 import com.lordkadoc.server.entities.LivingEntity;
 import com.lordkadoc.server.entities.Player;
 import com.lordkadoc.server.entities.Zombie;
@@ -147,14 +148,25 @@ public class TargetManager {
 		return cells;
 	}
 	
-	public void moveZombieTo(World world, Zombie zombie, Cell cell){
-		Cell zombieCell = world.getEntityCurrentCell(zombie);
-		int x = cell.getX()-zombieCell.getX();
-		int y = cell.getY()-zombieCell.getY();
-		zombie.setDx(10*x);
-		zombie.setDy(10*y);
+	public void moveZombieToward(World world, Zombie zombie, Cell cell){
+		double x1 = zombie.getX();
+		double y1 = zombie.getY();
+		double x2 = cell.getX()*Constants.CELL_SIZE+Constants.CELL_SIZE/2;
+		double y2 = cell.getY()*Constants.CELL_SIZE+Constants.CELL_SIZE/2;
+		double x = x2-x1;
+		double y = y2-y1;
+		double m = Math.abs(x) + Math.abs(y);
+		double n = 10 / m;
+		x = x*n;
+		y = y*n;
+		zombie.setDx(x);
+		zombie.setDy(y);
 		new Movement().move2(zombie, 10, world);
 	}	
+	
+	public void rotateZombieToward(Zombie zombie) {
+		zombie.setAngle(Math.atan2(zombie.getTarget().getY()-zombie.getY(), zombie.getTarget().getX()-zombie.getX()));
+	}
 	
 	public static void main(String[] args) {
 		Comparator<Node> nodeComparator = new NodeComparator();
@@ -167,6 +179,7 @@ public class TargetManager {
 		System.out.println(openList.poll().getF());
 		System.out.println(openList.poll().getF());
 	}
+
 	
 
 }

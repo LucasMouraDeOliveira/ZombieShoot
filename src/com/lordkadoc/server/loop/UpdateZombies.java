@@ -35,10 +35,11 @@ public class UpdateZombies extends GameLoopOperation {
 					if(!zombie.hasTarget()){
 						TargetManager.getInstance().setTarget(zombie, world);
 					}else{
+						TargetManager.getInstance().rotateZombieToward(zombie);
 						//System.out.println(world.getEntityCurrentCell(zombie).getX() + "/" + world.getEntityCurrentCell(zombie).getY());
 						Cell nextCell = TargetManager.getInstance().nextTargetCell(zombie, world);
 						if(nextCell != null){
-							TargetManager.getInstance().moveZombieTo(world, zombie, nextCell);
+							TargetManager.getInstance().moveZombieToward(world, zombie, nextCell);
 						}
 					}
 				}
